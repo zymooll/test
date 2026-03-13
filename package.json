@@ -8,7 +8,10 @@
     "build": "electron-builder"
   },
   "keywords": ["music", "player", "electron", "audio"],
-  "author": "",
+  "author": {
+    "name": "Melodix",
+    "email": "melodix@example.com"
+  },
   "license": "MIT",
   "dependencies": {
     "music-metadata": "^10.6.1"
