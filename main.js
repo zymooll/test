@@ -34,7 +34,11 @@ function createWindow() {
     titleBarStyle: 'hidden',
     backgroundColor: '#0a0a0f',
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      // When packaged, preload.js is unpacked from the ASAR so Electron can load it as a file.
+      // asarUnpack in package.json ensures it ends up at resources/app.asar.unpacked/preload.js.
+      preload: app.isPackaged
+        ? path.join(process.resourcesPath, 'app.asar.unpacked', 'preload.js')
+        : path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
     },

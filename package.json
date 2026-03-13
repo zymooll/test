@@ -23,6 +23,8 @@
   "build": {
     "appId": "com.melodix.player",
     "productName": "Melodix",
+    "asar": true,
+    "asarUnpack": ["preload.js"],
     "files": [
       "main.js",
       "preload.js",
