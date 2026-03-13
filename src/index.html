@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' local-audio:; font-src 'self' data:;" />
+  <title>Melodix</title>
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+  <!-- ═══════ Title Bar ═══════ -->
+  <header id="titlebar">
+    <div class="titlebar-drag">
+      <span class="app-logo">♫</span>
+      <span class="app-name">Melodix</span>
+    </div>
+    <div class="titlebar-controls">
+      <button id="btn-min" title="Minimize">─</button>
+      <button id="btn-max" title="Maximize">□</button>
+      <button id="btn-close" title="Close">✕</button>
+    </div>
+  </header>
+
+  <!-- ═══════ Main Layout ═══════ -->
+  <div id="app">
+    <!-- ── Sidebar ── -->
+    <aside id="sidebar">
+      <nav>
+        <button class="nav-item active" data-view="library">
+          <span class="nav-icon">📚</span>
+          <span>Music Library</span>
+        </button>
+        <button class="nav-item" data-view="playlists">
+          <span class="nav-icon">📋</span>
+          <span>Playlists</span>
+        </button>
+      </nav>
+      <div id="sidebar-playlists">
+        <div class="sidebar-section-header">
+          <span>My Playlists</span>
+          <button id="btn-new-playlist" title="New Playlist">＋</button>
+        </div>
+        <ul id="playlist-list"></ul>
+      </div>
+      <div id="folder-section">
+        <div class="sidebar-section-header">
+          <span>Folders</span>
+          <button id="btn-add-folder" title="Add Folder">📁</button>
+        </div>
+        <ul id="folder-list"></ul>
+      </div>
+    </aside>
+
+    <!-- ── Content Area ── -->
+    <main id="content">
+      <!-- Library View -->
+      <section id="view-library" class="view active">
+        <div class="view-header">
+          <h1>Music Library</h1>
+          <div class="view-actions">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="library-search" placeholder="Search tracks..." />
+            </div>
+          </div>
+        </div>
+        <div class="track-list-header">
+          <span class="col-num">#</span>
+          <span class="col-title">Title</span>
+          <span class="col-artist">Artist</span>
+          <span class="col-album">Album</span>
+          <span class="col-duration">Duration</span>
+          <span class="col-actions"></span>
+        </div>
+        <div id="library-tracks" class="track-list"></div>
+        <div id="library-empty" class="empty-state">
+          <div class="empty-icon">🎵</div>
+          <h2>Your library is empty</h2>
+          <p>Click the folder icon in the sidebar to add a music folder</p>
+        </div>
+      </section>
+
+      <!-- Playlists View -->
+      <section id="view-playlists" class="view">
+        <div class="view-header">
+          <h1 id="playlist-view-title">Playlists</h1>
+          <div class="view-actions">
+            <button id="btn-create-playlist" class="btn-primary">＋ New Playlist</button>
+          </div>
+        </div>
+        <div id="playlist-grid" class="playlist-grid"></div>
+        <div id="playlist-detail" class="hidden">
+          <div class="playlist-detail-header">
+            <button id="btn-back-playlists" class="btn-ghost">← Back</button>
+            <h2 id="playlist-detail-name"></h2>
+            <button id="btn-delete-playlist" class="btn-danger" title="Delete Playlist">🗑️</button>
+          </div>
+          <div class="track-list-header">
+            <span class="col-num">#</span>
+            <span class="col-title">Title</span>
+            <span class="col-artist">Artist</span>
+            <span class="col-album">Album</span>
+            <span class="col-duration">Duration</span>
+            <span class="col-actions"></span>
+          </div>
+          <div id="playlist-tracks" class="track-list"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ═══════ Bottom Player Bar ═══════ -->
+  <footer id="player-bar" class="hidden">
+    <div class="player-track-info">
+      <img id="player-cover" src="" alt="" />
+      <div class="player-text">
+        <div id="player-title" class="player-title">—</div>
+        <div id="player-artist" class="player-artist">—</div>
+      </div>
+    </div>
+    <div class="player-controls">
+      <button id="btn-shuffle" class="ctrl-btn" title="Shuffle">🔀</button>
+      <button id="btn-prev" class="ctrl-btn" title="Previous">⏮</button>
+      <button id="btn-play" class="ctrl-btn ctrl-play" title="Play">▶</button>
+      <button id="btn-next" class="ctrl-btn" title="Next">⏭</button>
+      <button id="btn-repeat" class="ctrl-btn" title="Repeat">🔁</button>
+    </div>
+    <div class="player-progress">
+      <span id="player-current-time">0:00</span>
+      <input type="range" id="player-seek" min="0" max="100" value="0" />
+      <span id="player-total-time">0:00</span>
+    </div>
+    <div class="player-extra">
+      <button id="btn-volume-icon" class="ctrl-btn" title="Volume">🔊</button>
+      <input type="range" id="player-volume" min="0" max="100" value="80" />
+      <button id="btn-immersive" class="ctrl-btn" title="Immersive Mode">⤢</button>
+    </div>
+  </footer>
+
+  <!-- ═══════ Immersive Player Overlay ═══════ -->
+  <div id="immersive-overlay" class="hidden">
+    <div id="immersive-bg"></div>
+    <div id="immersive-bg-overlay"></div>
+    <div class="immersive-content">
+      <button id="btn-exit-immersive" class="immersive-close" title="Exit">✕</button>
+      <div class="immersive-top">
+        <div class="immersive-cover-wrap">
+          <img id="immersive-cover" src="" alt="Album Art" />
+          <div class="cover-glow"></div>
+        </div>
+        <div class="immersive-info">
+          <h1 id="immersive-title"></h1>
+          <h2 id="immersive-artist"></h2>
+          <h3 id="immersive-album"></h3>
+        </div>
+      </div>
+      <div class="immersive-lyrics-container">
+        <div id="immersive-lyrics" class="immersive-lyrics"></div>
+      </div>
+      <div class="immersive-controls">
+        <div class="immersive-progress">
+          <span id="imm-current-time">0:00</span>
+          <input type="range" id="imm-seek" min="0" max="100" value="0" />
+          <span id="imm-total-time">0:00</span>
+        </div>
+        <div class="immersive-btns">
+          <button id="imm-shuffle" class="ctrl-btn">🔀</button>
+          <button id="imm-prev" class="ctrl-btn">⏮</button>
+          <button id="imm-play" class="ctrl-btn ctrl-play">▶</button>
+          <button id="imm-next" class="ctrl-btn">⏭</button>
+          <button id="imm-repeat" class="ctrl-btn">🔁</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ Add-to-Playlist Modal ═══════ -->
+  <div id="modal-add-to-playlist" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <h3>Add to Playlist</h3>
+      <ul id="modal-playlist-list"></ul>
+      <button class="btn-ghost modal-cancel">Cancel</button>
+    </div>
+  </div>
+
+  <!-- ═══════ Audio Element ═══════ -->
+  <audio id="audio-element" preload="auto"></audio>
+
+  <script src="js/renderer.js"></script>
+</body>
+</html>
