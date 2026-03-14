@@ -90,8 +90,14 @@
 
   /* ═══════ Initialization ═══════ */
   async function init() {
-    state.library = await window.api.getLibrary();
-    state.playlists = await window.api.getPlaylists();
+    try {
+      state.library = await window.api.getLibrary();
+      state.playlists = await window.api.getPlaylists();
+    } catch (err) {
+      console.error('Failed to load initial data:', err);
+      state.library = { folders: [], tracks: [] };
+      state.playlists = [];
+    }
     audio.volume = 0.8;
     renderAll();
     bindEvents();

@@ -23,9 +23,12 @@
   "build": {
     "appId": "com.melodix.player",
     "productName": "Melodix",
+    "asar": true,
+    "extraResources": [
+      { "from": "preload.js", "to": "preload.js" }
+    ],
     "files": [
       "main.js",
-      "preload.js",
       "src/**/*"
     ],
     "win": {
